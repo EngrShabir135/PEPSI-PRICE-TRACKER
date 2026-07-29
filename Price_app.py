@@ -305,7 +305,10 @@ def style_index_table(df: pd.DataFrame):
 
     fmt = {c: "{:.0f}%" for c in idx_cols}
     fmt.update({c: "{:,.0f}" for c in SELECTED_COMPANIES if c in df.columns})
-    return df.style.format(fmt, na_rep="").applymap(color, subset=idx_cols)
+    styler = df.style.format(fmt, na_rep="")
+    if hasattr(styler, "map"):
+        return styler.map(color, subset=idx_cols)
+    return styler.applymap(color, subset=idx_cols)
 
 
 def trend_chart(hist_df: pd.DataFrame, value_col: str, title=""):
